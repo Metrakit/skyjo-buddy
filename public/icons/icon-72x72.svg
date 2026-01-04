@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+  <rect width="72" height="72" fill="#3b82f6" rx="9"/>
+  <g transform="translate(36, 36)">
+    <circle cx="0" cy="0" r="19.44" fill="none" stroke="#ffffff" stroke-width="2.88"/>
+    <circle cx="0" cy="0" r="13.68" fill="none" stroke="#ffffff" stroke-width="2.88"/>
+    <circle cx="0" cy="0" r="7.92" fill="none" stroke="#ffffff" stroke-width="2.88"/>
+    <circle cx="0" cy="0" r="2.88" fill="#ffffff"/>
+    <text x="0" y="4.32" font-family="Arial, sans-serif" font-size="25.2" font-weight="bold" fill="#ffffff" text-anchor="middle">S</text>
+  </g>
+</svg>
