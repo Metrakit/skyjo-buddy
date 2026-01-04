@@ -1,5 +1,7 @@
 # 🎯 Skyjo Buddy
 
+Url: https://skyjo-buddy.vercel.app/
+
 A modern, lightweight score tracking application for the Skyjo board game, built with vanilla TypeScript and Web Components.
 Totally free, 0 ads, no trackers, no dependencies.
 
