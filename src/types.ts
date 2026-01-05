@@ -9,6 +9,7 @@ export interface Round {
   roundNumber: number;
   scores: { [playerId: string]: number };
   timestamp: number;
+  flippedAll?: { [playerId: string]: boolean }; // Track who flipped all cards
 }
 
 export interface Game {
@@ -18,6 +19,7 @@ export interface Game {
   rounds: Round[];
   currentRound: number;
   scoreLimit: number;
+  skyjoRule: boolean; // Double points if flip all but don't have lowest score
   isFinished: boolean;
   createdAt: number;
   finishedAt?: number;

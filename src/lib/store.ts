@@ -37,7 +37,7 @@ export class AppStore {
   }
 
   // Actions
-  createGame(name: string, playerNames: string[], scoreLimit: number) {
+  createGame(name: string, playerNames: string[], scoreLimit: number, skyjoRule: boolean = true) {
     const players: Player[] = playerNames.map(pName => ({
       id: crypto.randomUUID(),
       name: pName,
@@ -52,6 +52,7 @@ export class AppStore {
       rounds: [],
       currentRound: 0,
       scoreLimit,
+      skyjoRule,
       isFinished: false,
       createdAt: Date.now()
     }
@@ -69,18 +70,31 @@ export class AppStore {
     })
   }
 
-  addRound(gameId: string, scores: { [playerId: string]: number }) {
+  addRound(gameId: string, scores: { [playerId: string]: number }, flippedAll?: { [playerId: string]: boolean }) {
     const currentGame = this.state.games.find(g => g.id === gameId)
     if (!currentGame) return
 
+    // Apply Skyjo rule: double points if player flipped all but doesn't have lowest score
+    const processedScores = { ...scores }
+    if (currentGame.skyjoRule && flippedAll) {
+      const lowestScore = Math.min(...Object.values(scores))
+
+      Object.keys(flippedAll).forEach(playerId => {
+        if (flippedAll[playerId] && scores[playerId] > lowestScore) {
+          processedScores[playerId] = scores[playerId] * 2
+        }
+      })
+    }
+
     const newRound: Round = {
       roundNumber: currentGame.rounds.length + 1,
-      scores,
-      timestamp: Date.now()
+      scores: processedScores,
+      timestamp: Date.now(),
+      flippedAll
     }
 
     const updatedPlayers = currentGame.players.map(player => {
-      const roundScore = scores[player.id] || 0
+      const roundScore = processedScores[player.id] || 0
       const newScores = [...player.scores, roundScore]
       const totalScore = newScores.reduce((sum, s) => sum + s, 0)
       return { ...player, scores: newScores, totalScore }

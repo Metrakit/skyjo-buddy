@@ -55,6 +55,8 @@ export const en: Translations = {
       gameName: 'Game name',
       gameNamePlaceholder: 'Friday night game...',
       scoreLimitLabel: 'Score limit (default: 100)',
+      skyjoRuleLabel: 'Double the points',
+      skyjoRuleDescription: 'If the player who reveals all their cards first does not have the lowest score, their points are doubled for the round.',
       playersLabel: 'Players',
       playerNamePlaceholder: 'Player name...',
       createButton: 'Create game'
@@ -62,6 +64,8 @@ export const en: Translations = {
     addRound: {
       title: 'Round {round}',
       description: 'Enter each player\'s score for this round',
+      flippedAllLabel: 'Player who flipped all cards',
+      selectPlayer: 'Select...',
       submitButton: 'Submit round'
     },
     settings: {

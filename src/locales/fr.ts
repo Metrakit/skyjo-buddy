@@ -53,6 +53,8 @@ export const fr = {
       gameName: 'Nom de la partie',
       gameNamePlaceholder: 'Partie du vendredi soir...',
       scoreLimitLabel: 'Score limite (défaut: 100)',
+      skyjoRuleLabel: 'Doubler les points',
+      skyjoRuleDescription: 'Si le joueur qui retourne toutes ses cartes en premier n’a pas le score le plus bas, son score est doublé pour la manche.',
       playersLabel: 'Joueurs',
       playerNamePlaceholder: 'Nom du joueur...',
       createButton: 'Créer la partie'
@@ -60,6 +62,8 @@ export const fr = {
     addRound: {
       title: 'Manche {round}',
       description: 'Entrez le score de chaque joueur pour cette manche',
+      flippedAllLabel: 'Joueur ayant retourné toutes ses cartes',
+      selectPlayer: 'Sélectionner...',
       submitButton: 'Valider la manche'
     },
     settings: {

@@ -5,6 +5,7 @@ import { inlineIcon } from '../../lib/icons'
 
 export class AddRoundModal extends HTMLElement {
   private scores: { [playerId: string]: number } = {}
+  private flippedAll: { [playerId: string]: boolean } = {}
   game!: Game
 
   connectedCallback() {
@@ -14,6 +15,18 @@ export class AddRoundModal extends HTMLElement {
           <button class="modal-close" id="close-modal">✕</button>
           <h2 class="modal-title">${i18n.t('modal.addRound.title', { round: (this.game.rounds.length + 1).toString() })}</h2>
           <p class="modal-description">${i18n.t('modal.addRound.description')}</p>
+
+          ${this.game.skyjoRule ? `
+            <div class="mb-4">
+              <label class="label">${i18n.t('modal.addRound.flippedAllLabel')}</label>
+              <select id="flipped-all-select" class="input">
+                <option value="" disabled selected>${i18n.t('modal.addRound.selectPlayer')}</option>
+                ${this.game.players.map(player => `
+                  <option value="${player.id}">${player.name}</option>
+                `).join('')}
+              </select>
+            </div>
+          ` : ''}
 
           <div style="max-height: 400px; overflow-y: auto;">
             ${this.game.players.map((player, index) => `
@@ -55,8 +68,21 @@ export class AddRoundModal extends HTMLElement {
       })
     })
 
+    const flippedSelect = this.querySelector('#flipped-all-select') as HTMLSelectElement | null
+    if (flippedSelect) {
+      flippedSelect.addEventListener('change', () => {
+        this.flippedAll = {}
+        const playerId = flippedSelect.value
+        if (playerId) {
+          this.flippedAll[playerId] = true
+        }
+        this.updateSubmitButton()
+      })
+    }
+
     this.querySelector('#submit-round-btn')!.addEventListener('click', () => {
-      store.addRound(this.game.id, this.scores)
+      const hasAnyFlipped = Object.values(this.flippedAll).some(v => v)
+      store.addRound(this.game.id, this.scores, hasAnyFlipped ? this.flippedAll : undefined)
       this.remove()
     })
   }
@@ -66,7 +92,14 @@ export class AddRoundModal extends HTMLElement {
     const allFilled = this.game.players.every(p =>
       this.scores[p.id] !== undefined && !isNaN(this.scores[p.id])
     )
-    btn.disabled = !allFilled
+
+    let playerSelected = true
+    if (this.game.skyjoRule) {
+      const flippedSelect = this.querySelector('#flipped-all-select') as HTMLSelectElement | null
+      playerSelected = flippedSelect ? flippedSelect.value !== '' : true
+    }
+
+    btn.disabled = !allFilled || !playerSelected
   }
 }
 

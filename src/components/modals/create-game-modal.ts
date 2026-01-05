@@ -25,6 +25,17 @@ export class CreateGameModal extends HTMLElement {
           </div>
 
           <div class="mb-4">
+            <label class="flex items-center gap-3" style="cursor: pointer;">
+              <input type="checkbox" id="skyjo-rule" checked style="width: 1.25rem; height: 1.25rem; cursor: pointer;" />
+              <span>
+                <strong>${i18n.t('modal.createGame.skyjoRuleLabel')}</strong>
+                <br/>
+                <span style="font-size: 0.875rem; color: var(--gray-600);">${i18n.t('modal.createGame.skyjoRuleDescription')}</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="mb-4">
             <label class="label">${i18n.t('modal.createGame.playersLabel')} (<span id="player-count">0</span>)</label>
             <div class="flex gap-2">
               <input type="text" class="input" id="player-name" placeholder="${i18n.t('modal.createGame.playerNamePlaceholder')}" />
@@ -60,8 +71,9 @@ export class CreateGameModal extends HTMLElement {
     createBtn.addEventListener('click', () => {
       const gameName = gameNameInput.value.trim()
       const scoreLimit = parseInt(scoreLimitInput.value) || 100
+      const skyjoRule = (this.querySelector('#skyjo-rule') as HTMLInputElement).checked
       if (gameName && this.players.length >= 2) {
-        const gameId = store.createGame(gameName, this.players, scoreLimit)
+        const gameId = store.createGame(gameName, this.players, scoreLimit, skyjoRule)
         this.remove()
         router.navigate('game', gameId)
       }
