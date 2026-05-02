@@ -2,13 +2,25 @@ import { store } from '../../lib/store'
 import { router } from '../../lib/router'
 import { i18n } from '../../lib/i18n'
 import { inlineIcon } from '../../lib/icons'
-import { getAvailableGameTypes, getGameConfig } from '../../lib/game-configs'
+import {
+  getGameConfig,
+  sortGameTypesByPopularity,
+  type RankedGameType
+} from '../../lib/game-configs'
 import type { GameType } from '../../types'
 
 export class CreateGameModal extends HTMLElement {
   private players: string[] = []
+  private rankedGameTypes: RankedGameType[] = []
+  private selectedGameType: GameType = 'skyjo'
+  private searchQuery: string = ''
 
   connectedCallback() {
+    this.rankedGameTypes = sortGameTypesByPopularity(store.getGames())
+    this.selectedGameType = this.rankedGameTypes[0]?.type ?? 'skyjo'
+
+    const initialConfig = getGameConfig(this.selectedGameType)
+
     this.innerHTML = `
       <div class="modal-overlay">
         <div class="modal-content">
@@ -18,14 +30,24 @@ export class CreateGameModal extends HTMLElement {
 
           <div class="mb-4">
             <label class="label">${i18n.t('modal.createGame.gameTypeLabel')}</label>
-            <select id="game-type" class="input">
-              ${getAvailableGameTypes().map(type => {
-                const config = getGameConfig(type)
-                return `<option value="${type}">${config.name}</option>`
-              }).join('')}
-            </select>
+            <div class="game-type-picker" data-open="false">
+              <div class="game-type-input-wrapper">
+                <input
+                  type="text"
+                  id="game-type-search"
+                  class="input game-type-search"
+                  placeholder="${i18n.t('modal.createGame.gameTypeSearchPlaceholder')}"
+                  autocomplete="off"
+                  value="${initialConfig.name}"
+                />
+                <span class="game-type-chevron" aria-hidden="true">${inlineIcon('chevronRight')}</span>
+              </div>
+              <div id="game-type-list" class="game-type-list">
+                ${this.renderGameTypeOptions()}
+              </div>
+            </div>
             <p class="text-sm mt-1" style="color: var(--gray-600);" id="game-type-description">
-              ${i18n.t('modal.createGame.skyjoDescription')}
+              ${i18n.t(`modal.createGame.${this.selectedGameType}Description`)}
             </p>
           </div>
 
@@ -36,7 +58,7 @@ export class CreateGameModal extends HTMLElement {
 
           <div class="mb-4">
             <label class="label">${i18n.t('modal.createGame.scoreLimitLabel')}</label>
-            <input type="number" class="input" id="score-limit" value="100" />
+            <input type="number" class="input" id="score-limit" value="${initialConfig.defaultScoreLimit}" />
             <p class="text-sm mt-1" style="color: var(--gray-600);">
               ${i18n.t('modal.createGame.scoreLimitHint')}
             </p>
@@ -64,25 +86,50 @@ export class CreateGameModal extends HTMLElement {
     const playerNameInput = this.querySelector('#player-name') as HTMLInputElement
     const gameNameInput = this.querySelector('#game-name') as HTMLInputElement
     const scoreLimitInput = this.querySelector('#score-limit') as HTMLInputElement
-    const gameTypeSelect = this.querySelector('#game-type') as HTMLSelectElement
-    const descriptionEl = this.querySelector('#game-type-description')!
+    const searchInput = this.querySelector('#game-type-search') as HTMLInputElement
+    const listEl = this.querySelector('#game-type-list') as HTMLElement
 
     closeBtn.addEventListener('click', () => this.remove())
     this.querySelector('.modal-overlay')!.addEventListener('click', (e) => {
       if (e.target === this.querySelector('.modal-overlay')) this.remove()
     })
 
-    // Update UI when game type changes
-    gameTypeSelect.addEventListener('change', () => {
-      const selectedType = gameTypeSelect.value as GameType
-      const config = getGameConfig(selectedType)
+    const picker = this.querySelector('.game-type-picker') as HTMLElement
 
-      // Update default score limit
-      scoreLimitInput.value = config.defaultScoreLimit.toString()
-
-      // Update description
-      descriptionEl.textContent = i18n.t(`modal.createGame.${selectedType}Description`)
+    searchInput.addEventListener('focus', () => {
+      picker.dataset.open = 'true'
+      searchInput.value = ''
+      this.searchQuery = ''
+      listEl.innerHTML = this.renderGameTypeOptions()
+      this.attachGameTypeOptionListeners()
     })
+
+    searchInput.addEventListener('blur', () => {
+      picker.dataset.open = 'false'
+      this.searchQuery = ''
+      searchInput.value = getGameConfig(this.selectedGameType).name
+    })
+
+    searchInput.addEventListener('input', () => {
+      this.searchQuery = searchInput.value
+      listEl.innerHTML = this.renderGameTypeOptions()
+      this.attachGameTypeOptionListeners()
+    })
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        searchInput.blur()
+      } else if (e.key === 'Enter') {
+        e.preventDefault()
+        const firstOption = listEl.querySelector('.game-type-option') as HTMLButtonElement | null
+        if (firstOption?.dataset.type) {
+          this.selectGameType(firstOption.dataset.type as GameType)
+          searchInput.blur()
+        }
+      }
+    })
+
+    this.attachGameTypeOptionListeners()
 
     addPlayerBtn.addEventListener('click', () => this.addPlayer())
     playerNameInput.addEventListener('keypress', (e) => {
@@ -91,16 +138,79 @@ export class CreateGameModal extends HTMLElement {
 
     createBtn.addEventListener('click', () => {
       const gameName = gameNameInput.value.trim()
-      const scoreLimit = parseInt(scoreLimitInput.value) || 100
-      const gameType = gameTypeSelect.value as GameType
+      const scoreLimit = parseInt(scoreLimitInput.value) || getGameConfig(this.selectedGameType).defaultScoreLimit
       if (gameName && this.players.length >= 2) {
-        const gameId = store.createGame(gameName, this.players, scoreLimit, gameType)
+        const gameId = store.createGame(gameName, this.players, scoreLimit, this.selectedGameType)
         this.remove()
         router.navigate('game', gameId)
       }
     })
 
     gameNameInput.addEventListener('input', () => this.updateCreateButton())
+  }
+
+  private renderGameTypeOptions(): string {
+    const query = this.searchQuery.trim().toLowerCase()
+    const filtered = query
+      ? this.rankedGameTypes.filter(({ type }) =>
+          getGameConfig(type).name.toLowerCase().includes(query)
+        )
+      : this.rankedGameTypes
+
+    if (filtered.length === 0) {
+      return `<p class="game-type-empty">${i18n.t('modal.createGame.noGameTypeFound')}</p>`
+    }
+
+    return filtered
+      .map(({ type, playCount, isMostPlayed }) => {
+        const config = getGameConfig(type)
+        const selected = type === this.selectedGameType
+        const popularBadge = isMostPlayed
+          ? `<span class="game-type-popular" title="${i18n.t('modal.createGame.mostPlayed')}">${inlineIcon('sparkles')} ${i18n.t('modal.createGame.mostPlayed')}</span>`
+          : ''
+        const countLabel = playCount > 0
+          ? `<span class="game-type-count">${i18n.t('modal.createGame.playCount', { count: playCount.toString() })}</span>`
+          : ''
+        return `
+          <button type="button" class="game-type-option ${selected ? 'selected' : ''}" data-type="${type}">
+            <span class="game-type-option-main">
+              <span class="game-type-badge" data-type="${type}">${config.name}</span>
+              ${popularBadge}
+            </span>
+            ${countLabel}
+          </button>
+        `
+      })
+      .join('')
+  }
+
+  private attachGameTypeOptionListeners() {
+    const options = this.querySelectorAll('.game-type-option') as NodeListOf<HTMLButtonElement>
+    const searchInput = this.querySelector('#game-type-search') as HTMLInputElement
+    options.forEach(option => {
+      option.addEventListener('mousedown', (e) => e.preventDefault())
+      option.addEventListener('click', () => {
+        const type = option.dataset.type as GameType
+        this.selectGameType(type)
+        searchInput.blur()
+      })
+    })
+  }
+
+  private selectGameType(type: GameType) {
+    if (type === this.selectedGameType) return
+    this.selectedGameType = type
+
+    const listEl = this.querySelector('#game-type-list') as HTMLElement
+    listEl.innerHTML = this.renderGameTypeOptions()
+    this.attachGameTypeOptionListeners()
+
+    const config = getGameConfig(type)
+    const scoreLimitInput = this.querySelector('#score-limit') as HTMLInputElement
+    scoreLimitInput.value = config.defaultScoreLimit.toString()
+
+    const descriptionEl = this.querySelector('#game-type-description')!
+    descriptionEl.textContent = i18n.t(`modal.createGame.${type}Description`)
   }
 
   addPlayer() {

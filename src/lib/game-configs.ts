@@ -1,4 +1,4 @@
-import type { GameType, GameTypeConfig } from '../types'
+import type { GameType, GameTypeConfig, Game } from '../types'
 
 export const GAME_TYPE_CONFIGS: Record<GameType, GameTypeConfig> = {
   skyjo: {
@@ -78,4 +78,35 @@ export function sortByCumulativeScore<T extends { cumulativeScore: number }>(
   return [...entries].sort((a, b) =>
     lowestWins ? a.cumulativeScore - b.cumulativeScore : b.cumulativeScore - a.cumulativeScore
   )
+}
+
+export interface RankedGameType {
+  type: GameType
+  playCount: number
+  isMostPlayed: boolean
+}
+
+export function sortGameTypesByPopularity(games: Game[]): RankedGameType[] {
+  const types = getAvailableGameTypes()
+  const counts = types.reduce((acc, type) => {
+    acc[type] = 0
+    return acc
+  }, {} as Record<GameType, number>)
+
+  games.forEach(g => {
+    if (counts[g.gameType] !== undefined) counts[g.gameType]++
+  })
+
+  const max = Math.max(...Object.values(counts))
+
+  return types
+    .map<RankedGameType>(type => ({
+      type,
+      playCount: counts[type],
+      isMostPlayed: max > 0 && counts[type] === max
+    }))
+    .sort((a, b) => {
+      if (a.playCount !== b.playCount) return b.playCount - a.playCount
+      return getGameConfig(a.type).name.localeCompare(getGameConfig(b.type).name)
+    })
 }
