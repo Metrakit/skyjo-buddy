@@ -5,6 +5,7 @@ import { inlineIcon } from '../lib/icons'
 import '../components/home-page'
 import '../components/game-view'
 import '../components/history-view'
+import '../components/stats-view'
 
 export class SkyjoApp extends HTMLElement {
   constructor() {
@@ -45,6 +46,13 @@ export class SkyjoApp extends HTMLElement {
             </button>
           </div>
         ` : ''}
+        ${route.view === 'stats' ? `
+          <div class="back-button">
+            <button class="btn btn-secondary" onclick="router.navigate('home')">
+              ${inlineIcon('arrowLeft')} ${i18n.t('game.backToHome')}
+            </button>
+          </div>
+        ` : ''}
 
         <div id="view-container"></div>
       </div>
@@ -54,6 +62,8 @@ export class SkyjoApp extends HTMLElement {
 
     if (route.view === 'home') {
       container.appendChild(document.createElement('home-page'))
+    } else if (route.view === 'stats') {
+      container.appendChild(document.createElement('stats-view'))
     } else if (route.view === 'game' && currentGame) {
       const gameView = document.createElement('game-view') as any
       gameView.game = currentGame

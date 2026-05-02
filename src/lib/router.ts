@@ -1,4 +1,4 @@
-export type View = 'home' | 'game' | 'history'
+export type View = 'home' | 'game' | 'history' | 'stats'
 
 export interface Route {
   view: View
@@ -22,6 +22,8 @@ export class Router {
       path = `/game/${gameId}`
     } else if (view === 'history' && gameId) {
       path = `/game/${gameId}/history`
+    } else if (view === 'stats') {
+      path = '/stats'
     }
 
     // Update URL without page reload
@@ -42,6 +44,11 @@ export class Router {
     const gameMatch = path.match(/^\/game\/([^/]+)$/)
     if (gameMatch) {
       return { view: 'game', gameId: gameMatch[1] }
+    }
+
+    // Match /stats
+    if (path === '/stats') {
+      return { view: 'stats' }
     }
 
     // Default to home

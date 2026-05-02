@@ -14,9 +14,14 @@ export class HomePage extends HTMLElement {
     this.innerHTML = `
       <div class="flex justify-between items-center mb-6">
         <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--gray-900);">${i18n.t('home.title')}</h2>
-        <button class="btn btn-secondary" id="settings-btn">
-          ${inlineIcon('settings')} ${i18n.t('home.settings')}
-        </button>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary" id="stats-btn">
+            ${inlineIcon('barChart')} ${i18n.t('home.stats')}
+          </button>
+          <button class="btn btn-secondary" id="settings-btn">
+            ${inlineIcon('settings')} ${i18n.t('home.settings')}
+          </button>
+        </div>
       </div>
 
       <button class="btn btn-primary btn-lg w-full mb-6" id="new-game-btn">
@@ -94,6 +99,10 @@ export class HomePage extends HTMLElement {
 
     this.querySelector('#settings-btn')?.addEventListener('click', () => {
       document.body.appendChild(document.createElement('settings-modal'))
+    })
+
+    this.querySelector('#stats-btn')?.addEventListener('click', () => {
+      router.navigate('stats')
     })
 
     this.querySelectorAll('.game-card[data-game-id]').forEach(card => {
