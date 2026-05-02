@@ -1,4 +1,4 @@
-# 🎯 Skyjo Buddy
+# 🎯 Skyjo Buddy and more
 
 Url: https://skyjo-buddy.vercel.app/
 
