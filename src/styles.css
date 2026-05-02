@@ -592,6 +592,12 @@ body {
   border-color: #c4b5fd;
 }
 
+.game-type-badge[data-type="uno"] {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
 .card-header.primary .game-type-badge {
   background: rgba(255, 255, 255, 0.2);
   color: white;

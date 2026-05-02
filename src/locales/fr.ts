@@ -58,6 +58,7 @@ export const fr = {
       skyjoDescription: 'Jeu de cartes où le plus bas score gagne. Score limite par défaut : 100 points.',
       papayooDescription: 'Jeu de plis à points négatifs. Total de 250 points par manche. Score limite par défaut : 500 points.',
       flip7Description: 'Jeu de stop-ou-encore où le plus haut score gagne. Score limite par défaut : 200 points.',
+      unoDescription: 'Jeu de cartes où le gagnant de chaque manche encaisse les points des cartes restantes. Le premier à 500 points gagne.',
       gameName: 'Nom de la partie',
       gameNamePlaceholder: 'Partie du vendredi soir...',
       scoreLimitLabel: 'Score limite',
@@ -69,7 +70,12 @@ export const fr = {
     addRound: {
       title: 'Manche {round}',
       description: 'Entrez le score de chaque joueur pour cette manche',
+      singleWinnerDescription: 'Sélectionnez le gagnant de la manche et son nombre de points',
       flippedAllLabel: 'Joueur ayant retourné toutes ses cartes',
+      winnerLabel: 'Gagnant de la manche',
+      winnerPointsLabel: 'Points gagnés',
+      winnerPointsPlaceholder: 'Total des cartes adverses...',
+      winnerPointsHint: 'Somme de toutes les cartes restantes des autres joueurs',
       selectPlayer: 'Sélectionner...',
       validationWarning: 'Total de la manche : {total} points (attendu : {expected} points)',
       submitButton: 'Valider la manche'
@@ -96,7 +102,8 @@ export const fr = {
   gameTypes: {
     skyjo: 'Skyjo',
     papayoo: 'Papayoo',
-    flip7: 'Flip 7'
+    flip7: 'Flip 7',
+    uno: 'UNO'
   }
 }
 

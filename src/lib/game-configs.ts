@@ -36,6 +36,19 @@ export const GAME_TYPE_CONFIGS: Record<GameType, GameTypeConfig> = {
       expectedRoundTotal: undefined
     },
     i18nKey: 'gameTypes.flip7'
+  },
+  uno: {
+    type: 'uno',
+    name: 'UNO',
+    defaultScoreLimit: 500,
+    scoringRules: {
+      lowestWins: false,
+      hasDoublingRule: false,
+      hasFlippedAllMechanic: false,
+      expectedRoundTotal: undefined,
+      singleWinnerPerRound: true
+    },
+    i18nKey: 'gameTypes.uno'
   }
 }
 

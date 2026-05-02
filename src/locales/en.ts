@@ -60,6 +60,7 @@ export const en: Translations = {
       skyjoDescription: 'Card game where lowest score wins. Default score limit: 100 points.',
       papayooDescription: 'Negative-point trick-taking game. Total of 250 points per round. Default score limit: 500 points.',
       flip7Description: 'Push-your-luck card game where highest score wins. Default score limit: 200 points.',
+      unoDescription: 'Card game where each round\'s winner banks the value of opponents\' remaining cards. First to 500 wins.',
       gameName: 'Game name',
       gameNamePlaceholder: 'Friday night game...',
       scoreLimitLabel: 'Score limit',
@@ -71,7 +72,12 @@ export const en: Translations = {
     addRound: {
       title: 'Round {round}',
       description: 'Enter each player\'s score for this round',
+      singleWinnerDescription: 'Select the round winner and their points',
       flippedAllLabel: 'Player who flipped all cards',
+      winnerLabel: 'Round winner',
+      winnerPointsLabel: 'Points won',
+      winnerPointsPlaceholder: 'Total of opponents\' cards...',
+      winnerPointsHint: 'Sum of all cards remaining in other players\' hands',
       selectPlayer: 'Select...',
       validationWarning: 'Round total: {total} points (expected: {expected} points)',
       submitButton: 'Submit round'
@@ -98,6 +104,7 @@ export const en: Translations = {
   gameTypes: {
     skyjo: 'Skyjo',
     papayoo: 'Papayoo',
-    flip7: 'Flip 7'
+    flip7: 'Flip 7',
+    uno: 'UNO'
   }
 }

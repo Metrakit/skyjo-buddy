@@ -12,7 +12,7 @@ export interface Round {
   flippedAll?: { [playerId: string]: boolean }; // Track who flipped all cards
 }
 
-export type GameType = 'skyjo' | 'papayoo' | 'flip7'
+export type GameType = 'skyjo' | 'papayoo' | 'flip7' | 'uno'
 
 export interface GameTypeConfig {
   type: GameType
@@ -23,6 +23,8 @@ export interface GameTypeConfig {
     hasDoublingRule: boolean
     hasFlippedAllMechanic: boolean
     expectedRoundTotal?: number
+    /** Only one player scores points per round (others get 0). */
+    singleWinnerPerRound?: boolean
   }
   i18nKey: string
 }
