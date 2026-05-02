@@ -2,19 +2,30 @@ import type { Game } from '../types'
 import { router } from '../lib/router'
 import { i18n } from '../lib/i18n'
 import { icon, inlineIcon } from '../lib/icons'
+import { sortPlayersByRank, getGameConfig } from '../lib/game-configs'
 import './modals/add-round-modal'
 
 export class GameView extends HTMLElement {
   game!: Game
 
   connectedCallback() {
-    const sortedPlayers = [...this.game.players].sort((a, b) => a.totalScore - b.totalScore)
+    const sortedPlayers = sortPlayersByRank(this.game.players, this.game.gameType)
+    const config = getGameConfig(this.game.gameType)
     const locale = i18n.getLocale()
+    const rankingDescriptionKey = config.scoringRules.lowestWins
+      ? 'game.rankingLowestWins'
+      : 'game.rankingHighestWins'
+    const gameOverDescriptionKey = config.scoringRules.lowestWins
+      ? 'game.gameFinishedDescriptionLowest'
+      : 'game.gameFinishedDescriptionHighest'
 
     this.innerHTML = `
       <!-- Game Header -->
       <div class="card mb-6">
         <div class="card-header primary">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="game-type-badge" data-type="${this.game.gameType}">${config.name}</span>
+          </div>
           <h2 class="card-title">${this.game.name}</h2>
           <p class="card-description">
             ${i18n.t('game.createdOn')} ${new Date(this.game.createdAt).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -63,7 +74,7 @@ export class GameView extends HTMLElement {
             <div class="text-center">
               <div style="font-size: 4rem; margin-bottom: 0.5rem;">${icon('trophy')}</div>
               <h3 class="card-title">${i18n.t('game.gameFinished')}</h3>
-              <p class="card-description">${i18n.t('game.gameFinishedDescription', { limit: this.game.scoreLimit.toString() })}</p>
+              <p class="card-description">${i18n.t(gameOverDescriptionKey, { limit: this.game.scoreLimit.toString() })}</p>
             </div>
           </div>
         </div>
@@ -72,7 +83,7 @@ export class GameView extends HTMLElement {
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">${inlineIcon('trophy')} ${i18n.t('game.currentRanking')}</h3>
-          <p class="card-description">${i18n.t('game.rankingDescription')}</p>
+          <p class="card-description">${i18n.t(rankingDescriptionKey)}</p>
         </div>
         <div class="card-content">
           ${sortedPlayers.map((player, index) => `

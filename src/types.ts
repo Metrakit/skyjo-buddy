@@ -12,6 +12,21 @@ export interface Round {
   flippedAll?: { [playerId: string]: boolean }; // Track who flipped all cards
 }
 
+export type GameType = 'skyjo' | 'papayoo' | 'flip7'
+
+export interface GameTypeConfig {
+  type: GameType
+  name: string
+  defaultScoreLimit: number
+  scoringRules: {
+    lowestWins: boolean
+    hasDoublingRule: boolean
+    hasFlippedAllMechanic: boolean
+    expectedRoundTotal?: number
+  }
+  i18nKey: string
+}
+
 export interface Game {
   id: string;
   name: string;
@@ -19,7 +34,8 @@ export interface Game {
   rounds: Round[];
   currentRound: number;
   scoreLimit: number;
-  skyjoRule: boolean; // Double points if flip all but don't have lowest score
+  skyjoRule?: boolean; // DEPRECATED - kept for backward compatibility
+  gameType: GameType; // NEW - primary field for game type
   isFinished: boolean;
   createdAt: number;
   finishedAt?: number;

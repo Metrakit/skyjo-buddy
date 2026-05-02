@@ -560,6 +560,44 @@ body {
   font-weight: 600;
 }
 
+/* Game type badge */
+.game-type-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--gray-200);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.game-type-badge[data-type="skyjo"] {
+  background: #dbeafe;
+  color: #1e40af;
+  border-color: #93c5fd;
+}
+
+.game-type-badge[data-type="papayoo"] {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fbbf24;
+}
+
+.game-type-badge[data-type="flip7"] {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #c4b5fd;
+}
+
+.card-header.primary .game-type-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* Action buttons row */
 .action-row {
   display: flex;

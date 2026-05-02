@@ -1,13 +1,13 @@
 export const fr = {
   app: {
     title: 'Skyjo Buddy',
-    subtitle: 'Compteur de points intelligent'
+    subtitle: 'Compteur de points multi-jeux'
   },
   home: {
     title: 'Mes parties',
     newGame: 'Créer une nouvelle partie',
     noGames: 'Aucune partie en cours',
-    noGamesDescription: 'Créez votre première partie de Skyjo pour commencer à comptabiliser vos scores !',
+    noGamesDescription: 'Créez votre première partie pour commencer à comptabiliser vos scores !',
     settings: 'Paramètres',
     players: 'Joueurs',
     rounds: 'Manches',
@@ -26,8 +26,12 @@ export const fr = {
     viewHistory: 'Voir l\'historique',
     gameFinished: 'Partie terminée !',
     gameFinishedDescription: 'Un joueur a atteint {limit} points',
+    gameFinishedDescriptionLowest: 'Un joueur a atteint {limit} points : le plus bas score gagne !',
+    gameFinishedDescriptionHighest: 'Un joueur a atteint {limit} points et remporte la partie !',
     currentRanking: 'Classement actuel',
     rankingDescription: 'Le joueur avec le score le plus bas gagne !',
+    rankingLowestWins: 'Le joueur avec le score le plus bas gagne !',
+    rankingHighestWins: 'Le joueur avec le score le plus haut gagne !',
     points: 'points',
     round: 'manche',
     rounds_plural: 'manches',
@@ -49,12 +53,15 @@ export const fr = {
   modal: {
     createGame: {
       title: 'Créer une nouvelle partie',
-      description: 'Configurez votre partie de Skyjo',
+      description: 'Configurez votre partie',
+      gameTypeLabel: 'Type de jeu',
+      skyjoDescription: 'Jeu de cartes où le plus bas score gagne. Score limite par défaut : 100 points.',
+      papayooDescription: 'Jeu de plis à points négatifs. Total de 250 points par manche. Score limite par défaut : 500 points.',
+      flip7Description: 'Jeu de stop-ou-encore où le plus haut score gagne. Score limite par défaut : 200 points.',
       gameName: 'Nom de la partie',
       gameNamePlaceholder: 'Partie du vendredi soir...',
-      scoreLimitLabel: 'Score limite (défaut: 100)',
-      skyjoRuleLabel: 'Doubler les points',
-      skyjoRuleDescription: 'Si le joueur qui retourne toutes ses cartes en premier n’a pas le score le plus bas, son score est doublé pour la manche.',
+      scoreLimitLabel: 'Score limite',
+      scoreLimitHint: 'Valeur par défaut dépend du type de jeu sélectionné',
       playersLabel: 'Joueurs',
       playerNamePlaceholder: 'Nom du joueur...',
       createButton: 'Créer la partie'
@@ -64,6 +71,7 @@ export const fr = {
       description: 'Entrez le score de chaque joueur pour cette manche',
       flippedAllLabel: 'Joueur ayant retourné toutes ses cartes',
       selectPlayer: 'Sélectionner...',
+      validationWarning: 'Total de la manche : {total} points (attendu : {expected} points)',
       submitButton: 'Valider la manche'
     },
     settings: {
@@ -84,6 +92,11 @@ export const fr = {
     cancel: 'Annuler',
     delete: 'Supprimer',
     confirm: 'Confirmer'
+  },
+  gameTypes: {
+    skyjo: 'Skyjo',
+    papayoo: 'Papayoo',
+    flip7: 'Flip 7'
   }
 }
 

@@ -2,6 +2,7 @@ import { store } from '../lib/store'
 import { router } from '../lib/router'
 import { i18n } from '../lib/i18n'
 import { icon, inlineIcon } from '../lib/icons'
+import { sortPlayersByRank, getGameConfig } from '../lib/game-configs'
 import './modals/create-game-modal'
 import './modals/settings-modal'
 
@@ -33,13 +34,17 @@ export class HomePage extends HTMLElement {
       ` : `
         <div class="grid grid-cols-2">
           ${games.map(game => {
-            const leader = [...game.players].sort((a, b) => a.totalScore - b.totalScore)[0]
+            const leader = sortPlayersByRank(game.players, game.gameType)[0]
+            const gameTypeName = getGameConfig(game.gameType).name
             return `
               <div class="game-card ${game.isFinished ? 'finished' : ''}" data-game-id="${game.id}">
                 <div class="game-card-header">
                   <div class="flex items-center justify-between mb-2">
                     <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--gray-900);">${game.name}</h3>
                     ${game.isFinished ? `<span style="display: inline-block; width: 1.5rem; height: 1.5rem;">${icon('trophy')}</span>` : ''}
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="game-type-badge" data-type="${game.gameType}">${gameTypeName}</span>
                   </div>
                   <p style="font-size: 0.8125rem; color: var(--gray-600);">
                     ${new Date(game.createdAt).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}

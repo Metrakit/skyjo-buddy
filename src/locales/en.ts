@@ -3,13 +3,13 @@ import type { Translations } from './fr'
 export const en: Translations = {
   app: {
     title: 'Skyjo Buddy',
-    subtitle: 'Smart score tracker'
+    subtitle: 'Multi-game score tracker'
   },
   home: {
     title: 'My Games',
     newGame: 'Create new game',
     noGames: 'No games yet',
-    noGamesDescription: 'Create your first Skyjo game to start tracking scores!',
+    noGamesDescription: 'Create your first game to start tracking scores!',
     settings: 'Settings',
     players: 'Players',
     rounds: 'Rounds',
@@ -28,8 +28,12 @@ export const en: Translations = {
     viewHistory: 'View history',
     gameFinished: 'Game finished!',
     gameFinishedDescription: 'A player has reached {limit} points',
+    gameFinishedDescriptionLowest: 'A player reached {limit} points — lowest score wins!',
+    gameFinishedDescriptionHighest: 'A player reached {limit} points and wins the game!',
     currentRanking: 'Current ranking',
     rankingDescription: 'The player with the lowest score wins!',
+    rankingLowestWins: 'The player with the lowest score wins!',
+    rankingHighestWins: 'The player with the highest score wins!',
     points: 'points',
     round: 'round',
     rounds_plural: 'rounds',
@@ -51,12 +55,15 @@ export const en: Translations = {
   modal: {
     createGame: {
       title: 'Create new game',
-      description: 'Configure your Skyjo game',
+      description: 'Configure your game',
+      gameTypeLabel: 'Game Type',
+      skyjoDescription: 'Card game where lowest score wins. Default score limit: 100 points.',
+      papayooDescription: 'Negative-point trick-taking game. Total of 250 points per round. Default score limit: 500 points.',
+      flip7Description: 'Push-your-luck card game where highest score wins. Default score limit: 200 points.',
       gameName: 'Game name',
       gameNamePlaceholder: 'Friday night game...',
-      scoreLimitLabel: 'Score limit (default: 100)',
-      skyjoRuleLabel: 'Double the points',
-      skyjoRuleDescription: 'If the player who reveals all their cards first does not have the lowest score, their points are doubled for the round.',
+      scoreLimitLabel: 'Score limit',
+      scoreLimitHint: 'Default value depends on selected game type',
       playersLabel: 'Players',
       playerNamePlaceholder: 'Player name...',
       createButton: 'Create game'
@@ -66,6 +73,7 @@ export const en: Translations = {
       description: 'Enter each player\'s score for this round',
       flippedAllLabel: 'Player who flipped all cards',
       selectPlayer: 'Select...',
+      validationWarning: 'Round total: {total} points (expected: {expected} points)',
       submitButton: 'Submit round'
     },
     settings: {
@@ -86,5 +94,10 @@ export const en: Translations = {
     cancel: 'Cancel',
     delete: 'Delete',
     confirm: 'Confirm'
+  },
+  gameTypes: {
+    skyjo: 'Skyjo',
+    papayoo: 'Papayoo',
+    flip7: 'Flip 7'
   }
 }

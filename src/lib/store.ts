@@ -1,5 +1,7 @@
-import type { AppState, Game, Player, Round } from '../types'
+import type { AppState, Game, Player, Round, GameType } from '../types'
 import { loadData, saveData, exportData, importData, resetData } from './storage'
+import { getGameConfig } from './game-configs'
+import { processRoundScores } from './scoring'
 
 export class AppStore {
   private state: AppState = { games: [], currentGameId: null }
@@ -37,7 +39,9 @@ export class AppStore {
   }
 
   // Actions
-  createGame(name: string, playerNames: string[], scoreLimit: number, skyjoRule: boolean = true) {
+  createGame(name: string, playerNames: string[], scoreLimit: number, gameType: GameType = 'skyjo') {
+    const config = getGameConfig(gameType)
+
     const players: Player[] = playerNames.map(pName => ({
       id: crypto.randomUUID(),
       name: pName,
@@ -52,7 +56,9 @@ export class AppStore {
       rounds: [],
       currentRound: 0,
       scoreLimit,
-      skyjoRule,
+      gameType,
+      // Set skyjoRule for backward compatibility
+      skyjoRule: gameType === 'skyjo' ? config.scoringRules.hasDoublingRule : undefined,
       isFinished: false,
       createdAt: Date.now()
     }
@@ -74,27 +80,27 @@ export class AppStore {
     const currentGame = this.state.games.find(g => g.id === gameId)
     if (!currentGame) return
 
-    // Apply Skyjo rule: double points if player flipped all but doesn't have lowest score
-    const processedScores = { ...scores }
-    if (currentGame.skyjoRule && flippedAll) {
-      const lowestScore = Math.min(...Object.values(scores))
+    // Use scoring strategy
+    const scoringResult = processRoundScores(
+      currentGame.gameType,
+      scores,
+      flippedAll
+    )
 
-      Object.keys(flippedAll).forEach(playerId => {
-        if (flippedAll[playerId] && scores[playerId] > lowestScore) {
-          processedScores[playerId] = scores[playerId] * 2
-        }
-      })
+    // Show warnings if any (console.warn for now)
+    if (scoringResult.warnings && scoringResult.warnings.length > 0) {
+      console.warn('Round scoring warnings:', scoringResult.warnings)
     }
 
     const newRound: Round = {
       roundNumber: currentGame.rounds.length + 1,
-      scores: processedScores,
+      scores: scoringResult.processedScores,
       timestamp: Date.now(),
-      flippedAll
+      flippedAll: scoringResult.flippedAll
     }
 
     const updatedPlayers = currentGame.players.map(player => {
-      const roundScore = processedScores[player.id] || 0
+      const roundScore = scoringResult.processedScores[player.id] || 0
       const newScores = [...player.scores, roundScore]
       const totalScore = newScores.reduce((sum, s) => sum + s, 0)
       return { ...player, scores: newScores, totalScore }

@@ -1,6 +1,7 @@
 import type { Game } from '../types'
 import { i18n } from '../lib/i18n'
 import { icon, inlineIcon } from '../lib/icons'
+import { sortByCumulativeScore, getGameConfig } from '../lib/game-configs'
 
 export class HistoryView extends HTMLElement {
   game!: Game
@@ -27,7 +28,9 @@ export class HistoryView extends HTMLElement {
       ` : `
         ${this.game.rounds.map((round, roundIndex) => {
           // Calculate cumulative scores up to this round for ranking
-          const playersWithCumulativeScores = this.game.players.map(player => {
+          const config = getGameConfig(this.game.gameType)
+          const lowestWins = config.scoringRules.lowestWins
+          const entries = this.game.players.map(player => {
             const scoresUpToNow = player.scores.slice(0, roundIndex + 1)
             const cumulativeScore = scoresUpToNow.reduce((sum, s) => sum + s, 0)
 
@@ -36,7 +39,8 @@ export class HistoryView extends HTMLElement {
               roundScore: round.scores[player.id] || 0,
               cumulativeScore
             }
-          }).sort((a, b) => a.cumulativeScore - b.cumulativeScore)
+          })
+          const playersWithCumulativeScores = sortByCumulativeScore(entries, this.game.gameType)
 
           return `
             <div class="card mb-4">
@@ -61,7 +65,10 @@ export class HistoryView extends HTMLElement {
               <div class="card-content">
                 ${playersWithCumulativeScores.map((player, index) => {
                   const score = player.roundScore
-                  const scoreColor = score < 0 ? 'var(--success)' : score > 0 ? 'var(--error)' : 'var(--gray-600)'
+                  const goodIsLow = lowestWins
+                  const isGood = goodIsLow ? score < 0 : score > 0
+                  const isBad = goodIsLow ? score > 0 : score < 0
+                  const scoreColor = isGood ? 'var(--success)' : isBad ? 'var(--error)' : 'var(--gray-600)'
 
                   return `
                     <div class="leaderboard-item rank-${index < 3 ? index + 1 : 'other'}">

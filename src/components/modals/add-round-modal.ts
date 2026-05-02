@@ -2,6 +2,7 @@ import type { Game } from '../../types'
 import { store } from '../../lib/store'
 import { i18n } from '../../lib/i18n'
 import { inlineIcon } from '../../lib/icons'
+import { getGameConfig } from '../../lib/game-configs'
 
 export class AddRoundModal extends HTMLElement {
   private scores: { [playerId: string]: number } = {}
@@ -9,6 +10,8 @@ export class AddRoundModal extends HTMLElement {
   game!: Game
 
   connectedCallback() {
+    const config = getGameConfig(this.game.gameType)
+
     this.innerHTML = `
       <div class="modal-overlay">
         <div class="modal-content">
@@ -16,7 +19,7 @@ export class AddRoundModal extends HTMLElement {
           <h2 class="modal-title">${i18n.t('modal.addRound.title', { round: (this.game.rounds.length + 1).toString() })}</h2>
           <p class="modal-description">${i18n.t('modal.addRound.description')}</p>
 
-          ${this.game.skyjoRule ? `
+          ${config.scoringRules.hasFlippedAllMechanic ? `
             <div class="mb-4">
               <label class="label">${i18n.t('modal.addRound.flippedAllLabel')}</label>
               <select id="flipped-all-select" class="input">
@@ -25,6 +28,14 @@ export class AddRoundModal extends HTMLElement {
                   <option value="${player.id}">${player.name}</option>
                 `).join('')}
               </select>
+            </div>
+          ` : ''}
+
+          ${config.scoringRules.expectedRoundTotal !== undefined ? `
+            <div id="validation-warning" class="mb-4 p-3 rounded hidden" style="background: #fef3c7; border: 1px solid #fbbf24;">
+              <p class="text-sm" style="color: #92400e;">
+                ⚠️ <span id="validation-message"></span>
+              </p>
             </div>
           ` : ''}
 
@@ -65,6 +76,7 @@ export class AddRoundModal extends HTMLElement {
         const playerId = input.dataset.playerId!
         this.scores[playerId] = parseInt(input.value) || 0
         this.updateSubmitButton()
+        this.validateRoundTotal()
       })
     })
 
@@ -87,14 +99,51 @@ export class AddRoundModal extends HTMLElement {
     })
   }
 
+  validateRoundTotal() {
+    const config = getGameConfig(this.game.gameType)
+
+    if (config.scoringRules.expectedRoundTotal === undefined) {
+      return
+    }
+
+    const warningDiv = this.querySelector('#validation-warning')
+    const messageSpan = this.querySelector('#validation-message')
+
+    if (!warningDiv || !messageSpan) return
+
+    const allFilled = this.game.players.every(p =>
+      this.scores[p.id] !== undefined && !isNaN(this.scores[p.id])
+    )
+
+    if (!allFilled) {
+      warningDiv.classList.add('hidden')
+      return
+    }
+
+    const total = Object.values(this.scores).reduce((sum, score) => sum + score, 0)
+    const expected = config.scoringRules.expectedRoundTotal
+
+    if (total !== expected) {
+      warningDiv.classList.remove('hidden')
+      messageSpan.textContent = i18n.t('modal.addRound.validationWarning', {
+        total: total.toString(),
+        expected: expected.toString()
+      })
+    } else {
+      warningDiv.classList.add('hidden')
+    }
+  }
+
   updateSubmitButton() {
     const btn = this.querySelector('#submit-round-btn') as HTMLButtonElement
+    const config = getGameConfig(this.game.gameType)
+
     const allFilled = this.game.players.every(p =>
       this.scores[p.id] !== undefined && !isNaN(this.scores[p.id])
     )
 
     let playerSelected = true
-    if (this.game.skyjoRule) {
+    if (config.scoringRules.hasFlippedAllMechanic) {
       const flippedSelect = this.querySelector('#flipped-all-select') as HTMLSelectElement | null
       playerSelected = flippedSelect ? flippedSelect.value !== '' : true
     }
