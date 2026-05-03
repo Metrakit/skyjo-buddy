@@ -3,6 +3,7 @@ import { store } from '../../lib/store'
 import { i18n } from '../../lib/i18n'
 import { inlineIcon } from '../../lib/icons'
 import { getGameConfig } from '../../lib/game-configs'
+import { celebrate } from '../../lib/confetti'
 
 export class AddRoundModal extends HTMLElement {
   private scores: { [playerId: string]: number } = {}
@@ -75,6 +76,7 @@ export class AddRoundModal extends HTMLElement {
     }
 
     this.querySelector('#submit-round-btn')!.addEventListener('click', () => {
+      const wasFinished = this.game.isFinished
       if (singleWinner) {
         const finalScores: { [playerId: string]: number } = {}
         this.game.players.forEach(p => {
@@ -86,6 +88,9 @@ export class AddRoundModal extends HTMLElement {
         store.addRound(this.game.id, this.scores, hasAnyFlipped ? this.flippedAll : undefined)
       }
       this.remove()
+      if (!wasFinished && store.getGameById(this.game.id)?.isFinished) {
+        celebrate()
+      }
     })
   }
 
