@@ -109,7 +109,8 @@ export const fr = {
       winnerPointsPlaceholder: 'Total des cartes adverses...',
       winnerPointsHint: 'Somme de toutes les cartes restantes des autres joueurs',
       selectPlayer: 'Sélectionner...',
-      validationWarning: 'Total de la manche : {total} points (attendu : {expected} points)',
+      validationWarningTitle: 'Total de la manche incorrect',
+      validationWarning: 'Total saisi : {total} points (attendu : {expected} points)',
       submitButton: 'Valider la manche'
     },
     settings: {

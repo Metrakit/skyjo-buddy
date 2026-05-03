@@ -111,7 +111,8 @@ export const en: Translations = {
       winnerPointsPlaceholder: 'Total of opponents\' cards...',
       winnerPointsHint: 'Sum of all cards remaining in other players\' hands',
       selectPlayer: 'Select...',
-      validationWarning: 'Round total: {total} points (expected: {expected} points)',
+      validationWarningTitle: 'Round total mismatch',
+      validationWarning: 'Entered total: {total} points (expected: {expected} points)',
       submitButton: 'Submit round'
     },
     settings: {

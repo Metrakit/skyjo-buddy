@@ -1,7 +1,7 @@
 import type { Game } from '../../types'
 import { store } from '../../lib/store'
 import { i18n } from '../../lib/i18n'
-import { inlineIcon } from '../../lib/icons'
+import { icon, inlineIcon } from '../../lib/icons'
 import { getGameConfig } from '../../lib/game-configs'
 import { celebrate } from '../../lib/confetti'
 
@@ -36,10 +36,12 @@ export class AddRoundModal extends HTMLElement {
           ` : ''}
 
           ${config.scoringRules.expectedRoundTotal !== undefined ? `
-            <div id="validation-warning" class="mb-4 p-3 rounded hidden" style="background: #fef3c7; border: 1px solid #fbbf24;">
-              <p class="text-sm" style="color: #92400e;">
-                ⚠️ <span id="validation-message"></span>
-              </p>
+            <div id="validation-warning" class="alert alert-warning mb-4 hidden" role="alert">
+              <div class="alert-icon">${icon('alertTriangle')}</div>
+              <div class="alert-content">
+                <p class="alert-title">${i18n.t('modal.addRound.validationWarningTitle')}</p>
+                <p class="alert-message" id="validation-message"></p>
+              </div>
             </div>
           ` : ''}
 
