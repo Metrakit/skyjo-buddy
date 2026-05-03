@@ -1202,6 +1202,19 @@ body {
 }
 
 @media (max-width: 640px) {
+  .btn-icon-mobile {
+    padding: 0.75rem;
+    gap: 0;
+  }
+
+  .btn-icon-mobile .btn-label {
+    display: none;
+  }
+
+  .btn-icon-mobile .inline-icon {
+    margin-right: 0;
+  }
+
   .stats-summary {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;

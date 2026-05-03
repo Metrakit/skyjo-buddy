@@ -15,11 +15,11 @@ export class HomePage extends HTMLElement {
       <div class="flex justify-between items-center mb-6">
         <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--gray-900);">${i18n.t('home.title')}</h2>
         <div class="flex gap-2">
-          <button class="btn btn-secondary" id="stats-btn">
-            ${inlineIcon('barChart')} ${i18n.t('home.stats')}
+          <button class="btn btn-secondary btn-icon-mobile" id="stats-btn" aria-label="${i18n.t('home.stats')}" title="${i18n.t('home.stats')}">
+            ${inlineIcon('barChart')}<span class="btn-label">${i18n.t('home.stats')}</span>
           </button>
-          <button class="btn btn-secondary" id="settings-btn">
-            ${inlineIcon('settings')} ${i18n.t('home.settings')}
+          <button class="btn btn-secondary btn-icon-mobile" id="settings-btn" aria-label="${i18n.t('home.settings')}" title="${i18n.t('home.settings')}">
+            ${inlineIcon('settings')}<span class="btn-label">${i18n.t('home.settings')}</span>
           </button>
         </div>
       </div>
