@@ -405,6 +405,8 @@ body {
 .w-full { width: 100%; }
 .flex-1 { flex: 1; }
 
+.hidden { display: none; }
+
 /* Player list */
 .player-item {
   display: flex;
