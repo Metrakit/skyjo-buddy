@@ -565,6 +565,47 @@ body {
   overflow: hidden;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  position: relative;
+}
+
+.game-card-delete {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+  opacity: 0.6;
+  z-index: 2;
+}
+
+.game-card-delete .icon {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  vertical-align: middle;
+  display: block;
+}
+
+.game-card:hover .game-card-delete {
+  opacity: 1;
+}
+
+.game-card-delete:hover,
+.game-card-delete:focus-visible {
+  color: var(--error);
+  background: var(--error-light);
+  opacity: 1;
+  outline: none;
 }
 
 .game-card:hover {

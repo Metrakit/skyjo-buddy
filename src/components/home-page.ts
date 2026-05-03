@@ -43,11 +43,16 @@ export class HomePage extends HTMLElement {
             const gameTypeName = getGameConfig(game.gameType).name
             return `
               <div class="game-card ${game.isFinished ? 'finished' : ''}" data-game-id="${game.id}">
+                <button
+                  class="game-card-delete delete-game-btn"
+                  data-game-id="${game.id}"
+                  aria-label="${i18n.t('home.delete')}"
+                  title="${i18n.t('home.delete')}"
+                >
+                  ${inlineIcon('trash')}
+                </button>
                 <div class="game-card-header">
-                  <div class="flex items-center justify-between mb-2">
-                    <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--gray-900);">${game.name}</h3>
-                    ${game.isFinished ? `<span style="display: inline-block; width: 1.5rem; height: 1.5rem;">${icon('trophy')}</span>` : ''}
-                  </div>
+                  <h3 class="mb-2" style="font-size: 1.125rem; font-weight: 600; color: var(--gray-900); padding-right: 2.25rem;">${game.name}</h3>
                   <div class="flex items-center gap-2 mb-1">
                     <span class="game-type-badge" data-type="${game.gameType}">${gameTypeName}</span>
                   </div>
@@ -76,14 +81,9 @@ export class HomePage extends HTMLElement {
                   ` : ''}
                   ${game.isFinished ? `
                     <div style="margin-top: 1rem; padding: 0.75rem; background: var(--success-light); border-radius: 0.5rem; text-align: center;">
-                      <p style="color: var(--success); font-weight: 600; font-size: 0.875rem;">✓ ${i18n.t('home.finished')}</p>
+                      <p style="color: var(--success); font-weight: 600; font-size: 0.875rem;">${inlineIcon('trophy')}${i18n.t('home.finished')}</p>
                     </div>
                   ` : ''}
-                  <div style="margin-top: 1.25rem;">
-                    <button class="btn btn-danger btn-sm w-full delete-game-btn" data-game-id="${game.id}">
-                      ${inlineIcon('trash')} ${i18n.t('home.delete')}
-                    </button>
-                  </div>
                 </div>
               </div>
             `
