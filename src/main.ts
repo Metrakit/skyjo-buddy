@@ -1,5 +1,6 @@
 import { store } from './lib/store'
 import { router } from './lib/router'
+import './lib/theme'
 import './components/app'
 
 // Make router and store global for onclick handlers

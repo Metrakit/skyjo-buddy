@@ -7,7 +7,20 @@
   <title>Board Game Buddy - Score Tracker</title>
   <meta name="description" content="Modern score tracking application for board games. Track scores offline with PWA support.">
 
-  <meta name="theme-color" content="#3b82f6">
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('theme') || 'auto';
+        var r = p === 'auto'
+          ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : p;
+        document.documentElement.setAttribute('data-theme', r);
+      } catch (e) {}
+    })();
+  </script>
+
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">

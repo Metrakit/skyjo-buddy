@@ -1,10 +1,12 @@
 import { store } from '../../lib/store'
 import { i18n } from '../../lib/i18n'
+import { theme, type ThemePref } from '../../lib/theme'
 import { inlineIcon } from '../../lib/icons'
 
 export class SettingsModal extends HTMLElement {
   connectedCallback() {
     const currentLocale = i18n.getLocale()
+    const currentTheme = theme.getPref()
 
     this.innerHTML = `
       <div class="modal-overlay">
@@ -18,6 +20,15 @@ export class SettingsModal extends HTMLElement {
             <select class="input" id="language-select">
               <option value="fr" ${currentLocale === 'fr' ? 'selected' : ''}>Français</option>
               <option value="en" ${currentLocale === 'en' ? 'selected' : ''}>English</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="label">${i18n.t('modal.settings.theme')}</label>
+            <select class="input" id="theme-select">
+              <option value="auto" ${currentTheme === 'auto' ? 'selected' : ''}>${i18n.t('modal.settings.themeAuto')}</option>
+              <option value="light" ${currentTheme === 'light' ? 'selected' : ''}>${i18n.t('modal.settings.themeLight')}</option>
+              <option value="dark" ${currentTheme === 'dark' ? 'selected' : ''}>${i18n.t('modal.settings.themeDark')}</option>
             </select>
           </div>
 
@@ -49,6 +60,10 @@ export class SettingsModal extends HTMLElement {
     this.querySelector('#language-select')!.addEventListener('change', (e) => {
       const newLocale = (e.target as HTMLSelectElement).value as 'fr' | 'en'
       i18n.setLocale(newLocale)
+    })
+
+    this.querySelector('#theme-select')!.addEventListener('change', (e) => {
+      theme.setPref((e.target as HTMLSelectElement).value as ThemePref)
     })
 
     this.querySelector('#export-btn')!.addEventListener('click', () => {
