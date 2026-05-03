@@ -86,6 +86,7 @@ export class AddRoundModal extends HTMLElement {
         })
         store.addRound(this.game.id, finalScores)
       } else {
+        this.syncScoresFromInputs()
         const hasAnyFlipped = Object.values(this.flippedAll).some(v => v)
         store.addRound(this.game.id, this.scores, hasAnyFlipped ? this.flippedAll : undefined)
       }
@@ -148,14 +149,31 @@ export class AddRoundModal extends HTMLElement {
 
   private attachPerPlayerListeners() {
     const inputs = this.querySelectorAll('.score-input') as NodeListOf<HTMLInputElement>
+    const refresh = () => {
+      this.syncScoresFromInputs()
+      this.updateSubmitButton()
+      this.validateRoundTotal()
+    }
     inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        const playerId = input.dataset.playerId!
-        this.scores[playerId] = parseInt(input.value) || 0
-        this.updateSubmitButton()
-        this.validateRoundTotal()
-      })
+      input.addEventListener('input', refresh)
+      input.addEventListener('change', refresh)
     })
+  }
+
+  private syncScoresFromInputs() {
+    const inputs = this.querySelectorAll('.score-input') as NodeListOf<HTMLInputElement>
+    const next: { [playerId: string]: number } = {}
+    inputs.forEach(input => {
+      const playerId = input.dataset.playerId
+      if (!playerId) return
+      const raw = input.value.trim()
+      if (raw === '') return
+      const parsed = Number(raw)
+      if (Number.isFinite(parsed)) {
+        next[playerId] = parsed
+      }
+    })
+    this.scores = next
   }
 
   private attachSingleWinnerListeners() {
@@ -192,6 +210,7 @@ export class AddRoundModal extends HTMLElement {
 
     if (!allFilled) {
       warningDiv.classList.add('hidden')
+      messageSpan.textContent = ''
       return
     }
 
@@ -206,6 +225,7 @@ export class AddRoundModal extends HTMLElement {
       })
     } else {
       warningDiv.classList.add('hidden')
+      messageSpan.textContent = ''
     }
   }
 

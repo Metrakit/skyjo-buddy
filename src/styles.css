@@ -405,7 +405,7 @@ body {
 .w-full { width: 100%; }
 .flex-1 { flex: 1; }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 /* Alert */
 .alert {
