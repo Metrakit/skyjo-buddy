@@ -8,7 +8,7 @@ import './modals/settings-modal'
 
 export class HomePage extends HTMLElement {
   connectedCallback() {
-    const games = store.getGames()
+    const games = [...store.getGames()].sort((a, b) => b.createdAt - a.createdAt)
     const locale = i18n.getLocale()
 
     this.innerHTML = `
