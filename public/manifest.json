@@ -1,7 +1,7 @@
 {
-  "name": "Skyjo Buddy",
-  "short_name": "Skyjo",
-  "description": "Modern score tracking application for the Skyjo board game",
+  "name": "Board Game Buddy",
+  "short_name": "Board Buddy",
+  "description": "Modern score tracking application for board games",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

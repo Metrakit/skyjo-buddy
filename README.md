@@ -1,8 +1,8 @@
-# 🎯 Skyjo Buddy and more
+# 🎯 Board Game Buddy
 
 Url: https://skyjo-buddy.vercel.app/
 
-A modern, lightweight score tracking application for the Skyjo board game, built with vanilla TypeScript and Web Components.
+A modern, lightweight score tracking application for board games (Skyjo, Papayoo, Flip 7, UNO…), built with vanilla TypeScript and Web Components.
 Totally free, 0 ads, no trackers, no dependencies.
 
 ![Bundle Size](https://img.shields.io/badge/bundle-9.4KB%20gzipped-success)

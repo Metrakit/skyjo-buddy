@@ -2,7 +2,7 @@ import type { Translations } from './fr'
 
 export const en: Translations = {
   app: {
-    title: 'Skyjo Buddy',
+    title: 'Board Game Buddy',
     subtitle: 'Multi-game score tracker'
   },
   home: {

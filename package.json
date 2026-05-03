@@ -1,9 +1,9 @@
 {
-  "name": "skyjo-buddy",
+  "name": "board-game-buddy",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Modern score tracking application for the Skyjo board game",
+  "description": "Modern score tracking application for board games",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

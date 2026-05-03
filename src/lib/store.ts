@@ -130,7 +130,7 @@ export class AppStore {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `skyjo-buddy-${Date.now()}.json`
+    a.download = `board-game-buddy-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
   }

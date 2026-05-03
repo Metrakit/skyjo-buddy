@@ -1,6 +1,6 @@
 export const fr = {
   app: {
-    title: 'Skyjo Buddy',
+    title: 'Board Game Buddy',
     subtitle: 'Compteur de points multi-jeux'
   },
   home: {
